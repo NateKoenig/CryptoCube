@@ -12,13 +12,13 @@ var wrapAPIKey = "your key goes here";
 
 
 // Global variables
-var cube, scene, camera, renderer, ETH, ETHColor, BTC, BTCColor, DOGE, DOGEColor;
+var ETHCube, BTCCube, DOGECube, scene, camera, renderer, ETH, ETHColor, BTC, BTCColor, DOGE, DOGEColor;
 
 
 // Create scene, camera, and renderer
 scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.z = 5;
+camera.position.z = 10;
 var faceSize = 1.5;
 
 // Set rendering
@@ -43,14 +43,14 @@ function fetchETH() {
 		}
 	}).done(function(data) {
 		if (data.success) {
-			ETH = data["data"]["output"];
+			ETH = data["data"]["output"][0];
 
 			//if - in front, then red, otherwise green
 			if (ETH.charAt(0) == '-') {
-				ETHColor = 0xff0000;
+				ETHColor = "red";
 			}
 			else {
-				ETHColor = 0x00ff00;
+				ETHColor = "green";
 			}
 		}
 	});
@@ -66,14 +66,14 @@ function fetchBTC() {
 		}
 	}).done(function(data) {
 		if (data.success) {
-			BTC = data["data"]["output"];
+			BTC = data["data"]["output"][0];
 
 			//if - in front, then red, otherwise green
 			if (BTC.charAt(0) == '-') {
-				BTCColor = 0xff0000;
+				BTCColor = "red";
 			}
 			else {
-				BTCColor = 0x00ff00;
+				BTCColor = "green";
 			}
 		}
 	});
@@ -89,47 +89,78 @@ function fetchDOGE() {
 		}
 	}).done(function(data) {
 		if (data.success) {
-			DOGE = data["data"]["output"];
+			DOGE = data["data"]["output"][0];
 
 			//if - in front, then red, otherwise green
 			if (DOGE.charAt(0) == '-') {
-				DOGEColor = 0xff0000;
+				DOGEColor = "red";
 			}
 			else {
-				DOGEColor = 0x00ff00;
+				DOGEColor = "green";
 			}
 		}
 	});
 }
 
 // Generate cube
-function createCube() {
-	//make cube
-	var cubeGeometry = new THREE.BoxGeometry( faceSize, faceSize, faceSize );
-	cubeGeometry.colorsNeedUpdate = true;
+function createCubes() {
+	//make cubes
+	var ETHGeometry = new THREE.BoxGeometry( faceSize, faceSize, faceSize );
+	var ETHMaterial;
+	var BTCGeometry = new THREE.BoxGeometry( faceSize, faceSize, faceSize );
+	var BTCMaterial;
+	var DOGEGeometry = new THREE.BoxGeometry( faceSize, faceSize, faceSize );
+	var DOGEMaterial;
 
-	cubeGeometry.faces[ 0 ].color.setHex( ETHColor ); //face 1: ETH
-    cubeGeometry.faces[ 1 ].color.setHex( BTCColor ); //face 2: BTC
-    cubeGeometry.faces[ 2 ].color.setHex( DOGEColor ); //face 3: DOGE
-    //cubeGeometry.faces[ 3 ].color.setHex( Math.random() * 0xffffff );
-    //cubeGeometry.faces[ 4 ].color.setHex( Math.random() * 0xffffff );
-    //cubeGeometry.faces[ 5 ].color.setHex( Math.random() * 0xffffff );
+	ETHGeometry.colorsNeedUpdate = true;
+	BTCGeometry.colorsNeedUpdate = true;
+	DOGEGeometry.colorsNeedUpdate = true;
 
-	var cubeMaterial = new THREE.MeshBasicMaterial( { vertexColors: THREE.FaceColors } );
-	cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
 
+	if (ETHColor == "green") {
+		ETHMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+	}
+	else {
+		ETHMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+	}
+
+	if (BTCColor == "green") {
+		BTCMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+	}
+	else {
+		BTCMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+	}
+
+	if (DOGEColor == "green") {
+		DOGEMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+	}
+	else {
+		DOGEMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+	}
+
+    
+	ETHCube = new THREE.Mesh( ETHGeometry, ETHMaterial );
+	BTCCube = new THREE.Mesh( BTCGeometry, BTCMaterial );
+	DOGECube = new THREE.Mesh( DOGEGeometry, DOGEMaterial );
+
+	ETHCube.position.set( 0, 0, 0 );
+	BTCCube.position.set( -5, 0, 0 );
+	DOGECube.position.set( 5, 0, 0 );
 
 	//add to scene
-	cube.position.set( 0, 0, 0 );
-	scene.add( cube );
+	scene.add( ETHCube, BTCCube, DOGECube );
 }
 
 // Generate animation
 function animate() {
 	requestAnimationFrame( animate );
 
-	cube.rotation.x += 0.01;
-	cube.rotation.y += 0.01;
+	ETHCube.rotation.x += 0.01;
+	ETHCube.rotation.y += 0.01;
+	BTCCube.rotation.x += 0.01
+	BTCCube.rotation.y += 0.01;
+	DOGECube.rotation.x += 0.01;
+	DOGECube.rotation.y += 0.01;
 
 	renderer.render ( scene, camera );
 }
@@ -142,7 +173,7 @@ function init() {
 	fetchDOGE();
 
 	//create the cube
-	createCube();
+	createCubes();
 
 	//create the animation
 	animate();
