@@ -1,2 +1,2 @@
 # CryptoCube
-A cube that shows crypto prices and who's face color represents whether or not the crypto is up or down for the day - built with threejs
+Cubes that represent different cryptos who's colors change based on how that crypto is doing that day - built with threejs
