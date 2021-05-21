@@ -8,7 +8,7 @@
 // ------------------------- BEGIN SETUP ------------------------- \\
 
 // API info
-var wrapAPIKey = "your key goes here";
+var wrapAPIKey = "put your key here";
 
 
 // Global variables
@@ -151,6 +151,7 @@ function createCubes() {
 	scene.add( ETHCube, BTCCube, DOGECube );
 }
 
+
 // Generate animation
 function animate() {
 	requestAnimationFrame( animate );
@@ -174,6 +175,7 @@ function init() {
 
 	//create the cube
 	createCubes();
+
 
 	//create the animation
 	animate();
